@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"looker.com/neutral-farming/internal/types"
 	"looker.com/neutral-farming/pkg"
 )
 
@@ -18,10 +19,10 @@ func NotFound(c *gin.Context) {
 	state, ok := pkg.ExtractAppState(c)
 
 	if ok {
-		uuid = state.Uuid
+		uuid = state.TraceID
 	}
 
-	apiErr := pkg.ApiError{
+	apiErr := types.ApiError{
 		Message: message,
 		UUID:    uuid,
 	}

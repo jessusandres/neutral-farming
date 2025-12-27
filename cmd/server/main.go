@@ -2,14 +2,16 @@ package main
 
 import (
 	"log"
-	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"looker.com/neutral-farming/internal/repository/gorm"
 
 	"looker.com/neutral-farming/internal/config"
 	"looker.com/neutral-farming/internal/controller"
+	"looker.com/neutral-farming/internal/http"
+	"looker.com/neutral-farming/internal/http/middlewares"
+	"looker.com/neutral-farming/internal/repository/gorm"
+	"looker.com/neutral-farming/internal/service"
 )
 
 func main() {
@@ -20,8 +22,6 @@ func main() {
 	log.Printf("🌐 Running locally with address: %s:", address)
 
 	router := buildGin()
-
-	gorm.NewDB()
 
 	err := router.Run(address)
 
@@ -35,14 +35,17 @@ func buildGin() *gin.Engine {
 
 	router := gin.Default()
 
-	api := router.Group(config.EnvConfig.ApiPrefix)
-	{
-		api.GET("", func(context *gin.Context) {
-			context.JSON(http.StatusOK, gin.H{
-				"message": "Hello from Gin API!",
-			})
-		})
-	}
+	// Middlewares
+	router.Use(middlewares.NewState())
+	router.Use(middlewares.HandleErr())
+
+	// Dependencies
+	db := gorm.NewDB()
+	repos := gorm.NewRepositories(db)
+	services := service.NewServices(repos)
+	controllers := controller.NewControllers(services)
+
+	http.SetupRouter(router, controllers)
 
 	router.NoRoute(controller.NotFound)
 

@@ -12,6 +12,6 @@ type Config struct {
 	DBMaxConnections int    `env:"DB_MAX_CONNECTIONS" default:"10"`
 	DBSSLMode        string `env:"DB_SSL_MODE" default:"disable"`
 	DBLogger         bool   `env:"DB_LOGGER" default:"true"`
-	ApiPrefix        string `env:"API_PREFIX" default:"api"`
+	ApiPrefix        string `env:"API_PREFIX" default:""`
 	Environment      string `env:"GO_ENV" default:"production"`
 }

@@ -1,7 +1,9 @@
-package pkg
+package types
 
 import "github.com/gin-gonic/gin"
 
+// ApiError represents the structure for error payloads in API responses.
+// It includes a message, a unique identifier (UUID), and optionally additional error details used for payload errors.
 type ApiError struct {
 	Message string `json:"message"`
 	Details any    `json:"payload,omitempty"`
