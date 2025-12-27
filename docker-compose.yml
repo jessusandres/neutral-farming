@@ -7,7 +7,7 @@ services:
     image: postgres:17.1-alpine
     restart: unless-stopped
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${EXTERNAL_DB_PORT}:${POSTGRES_PORT}"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -34,16 +34,34 @@ services:
     volumes:
       - .:/app
     ports:
-      - "${API_PORT}:8080"
+      - "${EXTERNAL_API_PORT}:8080"
     environment:
-      - HOST=0.0.0.0
-      - PORT=8080
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USERNAME=${POSTGRES_USER}
-      - DB_PASSWORD=${POSTGRES_PASSWORD}
-      - DB_NAME=${POSTGRES_DB}
+      HOST: 0.0.0.0
+      PORT: 8080
+      DB_HOST: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_NAME: ${POSTGRES_DB}
     restart: unless-stopped
+  migrate:
+    image: migrate/migrate
+    profiles: ["tools"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./migrations:/migrations
+      - ./scripts:/scripts
+#    environment:
+#    command:
+#      [
+#        "-path", "/migrations",
+#        "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=${DB_SSL_MODE}",
+#        "up"
+#      ]
+#    entrypoint: ["/bin/sh", "/scripts/migrate.sh"]
+
 volumes:
   postgresql:
   postgresql_lib:

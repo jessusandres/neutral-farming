@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS farms
+(
+    id         BIGSERIAL PRIMARY KEY,
+    name       VARCHAR(255) UNIQUE NOT NULL,
+    created_at TIMESTAMPTZ         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMPTZ
+);
+
+CREATE INDEX IF NOT EXISTS idx_farms_name ON farms (name);
