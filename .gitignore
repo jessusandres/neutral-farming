@@ -31,3 +31,7 @@ logs
 .scannerwork
 
 /tmp
+
+# Certs
+**.crt
+**.key

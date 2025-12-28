@@ -19,3 +19,6 @@ migrate-down:
 
 migrate-down-all:
 	$(MIGRATE) down
+
+generate-certs:
+	bash ./scripts/generate-certs.sh

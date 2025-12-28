@@ -40,6 +40,16 @@ API for management and analysis of irrigation data on farms. This project provid
 - Docker and Docker Compose
 - Make (beat way to run migrations)
 
+#### Generating local TLS certificates
+For local development, generate self-signed certificates (required for HTTPS and NGINX reverse proxy):
+   ```
+   bash ./scripts/generate-certs.sh
+   ```
+OR
+   ```
+   make generate-certs
+   ```
+
 ### Installation
 
 1. Clone the repository:
@@ -100,6 +110,7 @@ Consult the `openapi.yaml` file for full details on parameters and response sche
 - `make migrate-create name=migration_name`: Generate a new migration (alloacted in `migrations/`) with the given name.
 - `make migrate-down`: Reverts the last migration.
 - `make migrate-down-all`: Reverts all migrations.
+- `make generate-certs`: Generate self-signed certificates for local development.
 
 ## 📝 License
 

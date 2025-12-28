@@ -54,6 +54,17 @@ services:
       - ./migrations:/migrations
       - ./scripts:/scripts
 
+  nginx:
+    image: nginx:1.28.1-alpine3.23
+    container_name: nginx-proxy
+    ports:
+      - "${EXTERNAL_NGINX_PORT}:80"
+      - "${EXTERNAL_SSL_NGINX_PORT}:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - api
 volumes:
   postgresql:
   postgresql_lib:
