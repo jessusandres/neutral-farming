@@ -21,8 +21,6 @@ func HandleErr() gin.HandlerFunc {
 		if len(context.Errors) > 0 {
 			state, _ := pkg.ExtractAppState(context)
 
-			fmt.Printf("State: %#v\n", state)
-
 			err := context.Errors.Last()
 
 			slog.Info(fmt.Sprintf("Catching err: %s - request: [%s]", err.Error(), state.TraceID))

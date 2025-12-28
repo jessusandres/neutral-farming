@@ -24,8 +24,8 @@ func SetupRouter(router *gin.Engine, controllers *controller.Controllers) {
 			// farms
 			farmApi := v1.Group("farms")
 			{
-				farmApi.GET("/:id", controllers.FarmController.GetFarm)
-				farmApi.GET("/:id/irrigation/analytics", controllers.FarmController.GetFarm)
+				farmApi.GET("/:farm_id/irrigation/analytics", controllers.FarmController.AnalyticsByFarmAndSectorAndDates)
+				farmApi.GET("/:farm_id", controllers.FarmController.GetFarm)
 			}
 
 			// sectors

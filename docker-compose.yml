@@ -53,14 +53,6 @@ services:
     volumes:
       - ./migrations:/migrations
       - ./scripts:/scripts
-#    environment:
-#    command:
-#      [
-#        "-path", "/migrations",
-#        "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=${DB_SSL_MODE}",
-#        "up"
-#      ]
-#    entrypoint: ["/bin/sh", "/scripts/migrate.sh"]
 
 volumes:
   postgresql:
