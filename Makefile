@@ -11,11 +11,11 @@ MIGRATE=docker compose run --rm migrate -path /migrations -database $(DATABASE_U
 migrate-up:
 	$(MIGRATE) up
 
-migrate-down:
-	$(MIGRATE) down 1
-
 migrate-create:
 	$(MIGRATE) create -ext sql -dir /migrations -seq $(name)
+
+migrate-down:
+	$(MIGRATE) down 1
 
 migrate-down-all:
 	$(MIGRATE) down

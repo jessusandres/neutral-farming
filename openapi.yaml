@@ -1,0 +1,297 @@
+openapi: 3.0.0
+info:
+  title: Neutral Farming API
+  version: 1.0.0
+  description: API para la gestión y análisis de datos de riego en granjas.
+servers:
+  - url: http://localhost:9091
+    description: Servidor principal
+
+paths:
+  /health:
+    get:
+      summary: Endpoint de estado de applicación
+      responses:
+        '200':
+          description: Respuesta correcta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Application is healthy"
+
+  /v1/farms/{farm_id}:
+    get:
+      summary: Obtener información de una granja por ID
+      parameters:
+        - name: farm_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Información de la granja
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Farm'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/farms/{farm_id}/irrigation/analytics:
+    get:
+      summary: Obtener análisis de riego para una granja
+      parameters:
+        - name: farm_id
+          in: path
+          required: true
+          schema:
+            type: integer
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Fecha de inicio (YYYY-MM-DD)
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Fecha de fin (YYYY-MM-DD)
+        - name: sector_id
+          in: query
+          schema:
+            type: integer
+          description: ID del sector de riego
+        - name: aggregation
+          in: query
+          schema:
+            type: string
+            enum: [daily, weekly, monthly]
+          description: Nivel de agregación temporal
+      responses:
+        '200':
+          description: Análisis de riego exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FarmAnalytics'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /v1/sectors/{id}:
+    get:
+      summary: Obtener información de un sector de riego por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Información del sector
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sector'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /v1/irrigations/{id}:
+    get:
+      summary: Obtener información de un registro de riego por ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Información del registro de riego
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IrrigationData'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  schemas:
+    Farm:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Name:
+          type: string
+
+    Sector:
+      type: object
+      properties:
+        ID:
+          type: integer
+        Name:
+          type: string
+        FarmID:
+          type: integer
+
+    IrrigationData:
+      type: object
+      properties:
+        ID:
+          type: integer
+        FarmID:
+          type: integer
+        IrrigationSectorID:
+          type: integer
+        StartTime:
+          type: string
+          format: date-time
+        EndTime:
+          type: string
+          format: date-time
+        NominalAmount:
+          type: number
+        RealAmount:
+          type: number
+
+    FarmAnalytics:
+      type: object
+      properties:
+        farm_id:
+          type: integer
+        period:
+          type: object
+          properties:
+            start:
+              type: string
+              format: date-time
+            end:
+              type: string
+              format: date-time
+        aggregation:
+          type: string
+        metrics:
+          $ref: '#/components/schemas/Metrics'
+        time_series:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSeries'
+        sector_breakdown:
+          type: array
+          items:
+            $ref: '#/components/schemas/SectorBreakdown'
+
+    Metrics:
+      type: object
+      properties:
+        total_irrigation_volume_mm:
+          type: number
+        total_irrigation_events:
+          type: integer
+        average_efficiency:
+          type: number
+        efficiency_range:
+          type: object
+          properties:
+            min:
+              type: number
+            max:
+              type: number
+        same_period_-1:
+          $ref: '#/components/schemas/SamePeriod'
+        same_period_-2:
+          $ref: '#/components/schemas/SamePeriod'
+        period_comparison:
+          type: object
+          properties:
+            vs_same_period_-1:
+              $ref: '#/components/schemas/VsSamePeriod'
+            vs_same_period_-2:
+              $ref: '#/components/schemas/VsSamePeriod'
+
+    SamePeriod:
+      type: object
+      properties:
+        total_irrigation_volume_mm:
+          type: number
+        total_irrigation_events:
+          type: integer
+        average_efficiency:
+          type: number
+        efficiency_range:
+          type: object
+          properties:
+            min:
+              type: number
+            max:
+              type: number
+
+    VsSamePeriod:
+      type: object
+      properties:
+        volume_change_percent:
+          type: number
+        events_change_percent:
+          type: number
+        efficiency_change_percent:
+          type: number
+
+    SectorBreakdown:
+      type: object
+      properties:
+        sector_id:
+          type: integer
+        sector_name:
+          type: string
+        total_volume_mm:
+          type: number
+        average_efficiency:
+          type: number
+
+    TimeSeries:
+      type: object
+      properties:
+        date:
+          type: string
+        nominal_amount_mm:
+          type: number
+        real_amount_mm:
+          type: number
+        efficiency:
+          type: number
+        event_count:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+
+  responses:
+    BadRequest:
+      description: Solicitud incorrecta
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Recurso no encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

@@ -13,14 +13,15 @@ func SetupRouter(router *gin.Engine, controllers *controller.Controllers) {
 
 	api := router.Group(config.EnvConfig.ApiPrefix)
 	{
-		api.GET("", func(context *gin.Context) {
-			context.JSON(http.StatusOK, gin.H{
-				"message": "Hello from Gin API!",
-			})
-		})
-
 		v1 := api.Group("v1")
 		{
+
+			v1.GET("/health", func(context *gin.Context) {
+				context.JSON(http.StatusOK, gin.H{
+					"message": "Application is healthy",
+				})
+			})
+
 			// farms
 			farmApi := v1.Group("farms")
 			{
