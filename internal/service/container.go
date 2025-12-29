@@ -5,9 +5,9 @@ import (
 )
 
 type Services struct {
-	FarmService       *FarmService
-	SectorService     *SectorService
-	IrrigationService *IrrigationService
+	FarmService       IFarmService
+	SectorService     ISectorService
+	IrrigationService IIrrigationService
 }
 
 func NewServices(repos *gorm.Repositories) *Services {

@@ -7,6 +7,10 @@ import (
 	"looker.com/neutral-farming/internal/repository"
 )
 
+type ISectorService interface {
+	GetSector(id uint) (map[string]any, error)
+}
+
 type SectorService struct {
 	sectorRepository repository.IrrigationSectorRepository
 	logger           *slog.Logger

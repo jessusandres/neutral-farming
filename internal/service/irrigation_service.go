@@ -7,12 +7,16 @@ import (
 	"looker.com/neutral-farming/internal/repository"
 )
 
+type IIrrigationService interface {
+	GetIrrigation(id uint) (map[string]any, error)
+}
+
 type IrrigationService struct {
 	irrigationRepository repository.IrrigationDataRepository
 	logger               *slog.Logger
 }
 
-func NewIrrigationService(dataRepository repository.IrrigationDataRepository) *IrrigationService {
+func NewIrrigationService(dataRepository repository.IrrigationDataRepository) IIrrigationService {
 	return &IrrigationService{
 		irrigationRepository: dataRepository,
 		logger:               slog.With("component", "IrrigationService"),

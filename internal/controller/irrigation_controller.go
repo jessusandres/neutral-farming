@@ -4,16 +4,17 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+
 	"looker.com/neutral-farming/internal/service"
 	"looker.com/neutral-farming/internal/types"
 	"looker.com/neutral-farming/pkg"
 )
 
 type IrrigationController struct {
-	IrrigationService *service.IrrigationService
+	IrrigationService service.IIrrigationService
 }
 
-func NewIrrigationController(irrigationService *service.IrrigationService) *IrrigationController {
+func NewIrrigationController(irrigationService service.IIrrigationService) *IrrigationController {
 	return &IrrigationController{irrigationService}
 }
 

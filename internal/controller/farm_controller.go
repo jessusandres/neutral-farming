@@ -14,10 +14,10 @@ import (
 )
 
 type FarmController struct {
-	FarmService *service.FarmService
+	FarmService service.IFarmService
 }
 
-func NewFarmController(farmService *service.FarmService) *FarmController {
+func NewFarmController(farmService service.IFarmService) *FarmController {
 	return &FarmController{farmService}
 }
 

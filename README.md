@@ -103,6 +103,16 @@ The API will be available on the port configured in `EXTERNAL_API_PORT` (default
 
 Consult the `openapi.yaml` file for full details on parameters and response schemas.
 
+## Testing
+To run test inside the project run:
+   ```bash
+    go test ./...
+   ```
+Or for coverage resume:
+   ```bash
+   go test -cover ./...
+   ```
+
 ## 🛠️ Useful Commands (Makefile)
 
 - `make print-db`: Displays the configured database connection URL.

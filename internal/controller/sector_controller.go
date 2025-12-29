@@ -11,10 +11,10 @@ import (
 )
 
 type SectorController struct {
-	SectorService *service.SectorService
+	SectorService service.ISectorService
 }
 
-func NewSectorController(sectorService *service.SectorService) *SectorController {
+func NewSectorController(sectorService service.ISectorService) *SectorController {
 	return &SectorController{sectorService}
 }
 

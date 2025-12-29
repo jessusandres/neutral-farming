@@ -11,6 +11,11 @@ import (
 	"looker.com/neutral-farming/pkg"
 )
 
+type IFarmService interface {
+	GetFarm(id uint) (map[string]any, error)
+	RetrieveAnalytics(farmID uint, sectorID uint, startDateString string, endDateString string, aggregation string) (*dto.FarmAnalyticsDto, error)
+}
+
 type FarmService struct {
 	farmRepository repository.FarmRepository
 	logger         *slog.Logger
