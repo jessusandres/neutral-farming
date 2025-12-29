@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"looker.com/neutral-farming/internal/config"
 	"looker.com/neutral-farming/internal/http/dto"
 	"looker.com/neutral-farming/internal/service"
 	"looker.com/neutral-farming/internal/types"
@@ -64,6 +65,8 @@ func (controller *FarmController) AnalyticsByFarmAndSectorAndDates(context *gin.
 	if abort := pkg.AbortWithError(context, err); abort {
 		return
 	}
+
+	config.AnalyticsAccessCount.WithLabelValues(farmID).Inc()
 
 	context.JSON(http.StatusOK, data)
 }

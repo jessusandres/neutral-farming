@@ -23,6 +23,9 @@ services:
       - postgresql:/data/postgres
       - postgresql_lib:/var/lib/postgresql
       - postgresql_data:/var/lib/postgresql/data
+    networks:
+      - monitoring
+
   api:
     container_name: neutral-farming-api
     build:
@@ -44,6 +47,9 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_NAME: ${POSTGRES_DB}
     restart: unless-stopped
+    networks:
+      - monitoring
+
   migrate:
     image: migrate/migrate
     profiles: ["tools"]
@@ -53,6 +59,8 @@ services:
     volumes:
       - ./migrations:/migrations
       - ./scripts:/scripts
+    networks:
+      - monitoring
 
   nginx:
     image: nginx:1.28.1-alpine3.23
@@ -65,7 +73,13 @@ services:
       - ./nginx/certs:/etc/nginx/certs:ro
     depends_on:
       - api
+    networks:
+      - monitoring
 volumes:
   postgresql:
   postgresql_lib:
   postgresql_data:
+
+networks:
+  monitoring:
+    external: true

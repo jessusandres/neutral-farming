@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	ginprometheus "github.com/zsais/go-gin-prometheus"
 
 	"looker.com/neutral-farming/internal/config"
 	"looker.com/neutral-farming/internal/controller"
@@ -11,8 +12,14 @@ import (
 
 func SetupRouter(router *gin.Engine, controllers *controller.Controllers) {
 
+	p := ginprometheus.NewPrometheus("gin")
+	p.Use(router)
+
 	api := router.Group(config.EnvConfig.ApiPrefix)
 	{
+
+		//api.GET("/metrics", gin.WrapH(promhttp.Handler()))
+
 		v1 := api.Group("v1")
 		{
 
